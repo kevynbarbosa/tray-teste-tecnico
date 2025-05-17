@@ -30,8 +30,10 @@ class HubService
         ]);
 
         $statusCode = $response->getStatusCode();
-        if ($statusCode !== 200) {
+        if ($statusCode !== 201) {
             throw new \Exception("Failed to create offer in HUB. Status code: " . $statusCode);
         }
+
+        return true;
     }
 }

@@ -76,6 +76,7 @@ class ApiMarketPlaceService
 
         $statusCode = $response->getStatusCode();
         if ($statusCode !== 200) {
+            return false;
             throw new \Exception("Failed to fetch offer DETAILS from API. Status code: " . $statusCode);
         }
 
@@ -86,6 +87,8 @@ class ApiMarketPlaceService
             ['id' => $offerId],
             $responseArray['data']
         );
+
+        return true;
     }
 
     public function getOfferImages($offerId)
@@ -94,6 +97,7 @@ class ApiMarketPlaceService
 
         $statusCode = $response->getStatusCode();
         if ($statusCode !== 200) {
+            return false;
             throw new \Exception("Failed to fetch offers IMAGES from API. Status code: " . $statusCode);
         }
 
@@ -109,6 +113,8 @@ class ApiMarketPlaceService
                 ],
             );
         }
+
+        return true;
     }
 
     public function getOfferPrice($offerId)
@@ -117,6 +123,7 @@ class ApiMarketPlaceService
 
         $statusCode = $response->getStatusCode();
         if ($statusCode !== 200) {
+            return false;
             throw new \Exception("Failed to fetch offer PRICES from API. Status code: " . $statusCode);
         }
 
@@ -128,5 +135,7 @@ class ApiMarketPlaceService
                 'price' => $responseArray['data']['price'],
             ]
         );
+
+        return true;
     }
 }
