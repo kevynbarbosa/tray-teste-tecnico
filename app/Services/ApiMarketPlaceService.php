@@ -35,7 +35,9 @@ class ApiMarketPlaceService
 
         $statusCode = $response->getStatusCode();
         if ($statusCode !== 200) {
-            throw new \Exception("Failed to fetch offers from API. Status code: " . $statusCode);
+            logger()->error("Failed to fetch offers from API. Status code: " . $statusCode);
+            // throw new \Exception("Failed to fetch offers from API. Status code: " . $statusCode);
+            return false;
         }
 
         $responseArray = $this->sanitizeResponse($response);
@@ -44,6 +46,8 @@ class ApiMarketPlaceService
         for ($i = 1; $i <= $totalPages; $i++) {
             GetOffersPageJob::dispatch($i);
         }
+
+        return true;
     }
 
     public function getOffersPage(int $page)
@@ -52,7 +56,8 @@ class ApiMarketPlaceService
 
         $statusCode = $response->getStatusCode();
         if ($statusCode !== 200) {
-            throw new \Exception("Failed to fetch offers from API. Status code: " . $statusCode);
+            logger()->error("Failed to fetch offers from API. Status code: " . $statusCode);
+            // throw new \Exception("Failed to fetch offers from API. Status code: " . $statusCode);
         }
 
         $responseArray = $this->sanitizeResponse($response);
@@ -76,8 +81,9 @@ class ApiMarketPlaceService
 
         $statusCode = $response->getStatusCode();
         if ($statusCode !== 200) {
+            logger()->error("Failed to fetch offer DETAILS from API. Status code: " . $statusCode);
+            // throw new \Exception("Failed to fetch offer DETAILS from API. Status code: " . $statusCode);
             return false;
-            throw new \Exception("Failed to fetch offer DETAILS from API. Status code: " . $statusCode);
         }
 
         $responseArray = $this->sanitizeResponse($response);
@@ -97,8 +103,9 @@ class ApiMarketPlaceService
 
         $statusCode = $response->getStatusCode();
         if ($statusCode !== 200) {
+            // throw new \Exception("Failed to fetch offers IMAGES from API. Status code: " . $statusCode);
+            logger()->error("Failed to fetch offers IMAGES from API. Status code: " . $statusCode);
             return false;
-            throw new \Exception("Failed to fetch offers IMAGES from API. Status code: " . $statusCode);
         }
 
         $responseArray = $this->sanitizeResponse($response);
@@ -123,8 +130,9 @@ class ApiMarketPlaceService
 
         $statusCode = $response->getStatusCode();
         if ($statusCode !== 200) {
+            logger()->error("Failed to fetch offer PRICES from API. Status code: " . $statusCode);
+            // throw new \Exception("Failed to fetch offer PRICES from API. Status code: " . $statusCode);
             return false;
-            throw new \Exception("Failed to fetch offer PRICES from API. Status code: " . $statusCode);
         }
 
         $responseArray = $this->sanitizeResponse($response);
