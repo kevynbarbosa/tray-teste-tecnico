@@ -16,9 +16,10 @@ return new class extends Migration
             $table->unsignedBigInteger('id')->primary();
             $table->string('title')->nullable();
             $table->string('description')->nullable();
-            $table->string('price')->nullable();
-            $table->string('status');
+            $table->decimal('price', 12, 2)->nullable();
+            $table->string('status')->nullable();
             $table->unsignedInteger('stock')->nullable();
+            $table->string('workflow_status');
             $table->timestamps();
         });
     }

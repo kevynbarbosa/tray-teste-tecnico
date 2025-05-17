@@ -2,7 +2,10 @@
 
 namespace App\Services;
 
-use App\Jobs\GetOffersJob;
+use App\Jobs\GetOfferDetailJob;
+use App\Jobs\GetOffersPageJob;
+use App\Models\Offer;
+use App\Models\OfferImage;
 use GuzzleHttp\Client;
 
 class ApiMarketPlaceService
@@ -25,9 +28,9 @@ class ApiMarketPlaceService
         return $response;
     }
 
-    public function getOffers($page = 1)
+    public function getOffers()
     {
-        $response = $this->client->get($this->baseUrl . "/offers?page=$page");
+        $response = $this->client->get($this->baseUrl . "/offers?page=1");
 
         $statusCode = $response->getStatusCode();
         if ($statusCode !== 200) {
@@ -40,7 +43,25 @@ class ApiMarketPlaceService
         $totalPages = $arrayResponse['pagination']['total_pages'];
 
         for ($i = 1; $i <= $totalPages; $i++) {
-            GetOffersJob::dispatch($i);
+            GetOffersPageJob::dispatch($i);
+        }
+    }
+
+    public function getOffersPage($page)
+    {
+        $response = $this->client->get($this->baseUrl . "/offers?page=$page");
+
+        $statusCode = $response->getStatusCode();
+        if ($statusCode !== 200) {
+            throw new \Exception("Failed to fetch offers from API. Status code: " . $statusCode);
+        }
+
+        $responseBody = $this->sanitizeResponse($response);
+        $arrayResponse = json_decode($responseBody, true);
+
+        $offers = $arrayResponse['data']['offers'];
+        foreach ($offers as $offerId) {
+            GetOfferDetailJob::dispatch($offerId);
         }
     }
 
@@ -52,6 +73,14 @@ class ApiMarketPlaceService
         if ($statusCode !== 200) {
             throw new \Exception("Failed to fetch offer DETAILS from API. Status code: " . $statusCode);
         }
+
+        $responseBody = $this->sanitizeResponse($response);
+        $arrayResponse = json_decode($responseBody, true);
+
+        Offer::updateOrCreate(
+            ['id' => $offerId],
+            $arrayResponse['data']
+        );
     }
 
     public function getOfferImages($offerId)
@@ -61,6 +90,19 @@ class ApiMarketPlaceService
         $statusCode = $response->getStatusCode();
         if ($statusCode !== 200) {
             throw new \Exception("Failed to fetch offers IMAGES from API. Status code: " . $statusCode);
+        }
+
+        $responseBody = $this->sanitizeResponse($response);
+        $arrayResponse = json_decode($responseBody, true);
+
+        foreach ($arrayResponse['data']['images'] as $offerImage) {
+
+            OfferImage::updateOrCreate(
+                [
+                    'offer_id' => $offerId,
+                    'url' => $offerImage['url']
+                ],
+            );
         }
     }
 
@@ -72,5 +114,15 @@ class ApiMarketPlaceService
         if ($statusCode !== 200) {
             throw new \Exception("Failed to fetch offer PRICES from API. Status code: " . $statusCode);
         }
+
+        $responseBody = $this->sanitizeResponse($response);
+        $arrayResponse = json_decode($responseBody, true);
+
+        Offer::updateOrCreate(
+            ['id' => $offerId],
+            [
+                'price' => $arrayResponse['data']['price'],
+            ]
+        );
     }
 }

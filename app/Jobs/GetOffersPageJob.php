@@ -2,17 +2,18 @@
 
 namespace App\Jobs;
 
+use App\Services\ApiMarketPlaceService;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 
-class GetOffersJob implements ShouldQueue
+class GetOffersPageJob implements ShouldQueue
 {
     use Queueable;
 
     /**
      * Create a new job instance.
      */
-    public function __construct(public int $offerId) {}
+    public function __construct(public int $page) {}
 
 
     /**
@@ -20,8 +21,6 @@ class GetOffersJob implements ShouldQueue
      */
     public function handle(): void
     {
-        GetOfferDetailJob::dispatch($this->offerId);
-        GetOfferImagesJob::dispatch($this->offerId);
-        GetOfferPriceJob::dispatch($this->offerId);
+        (new ApiMarketPlaceService())->getOffersPage($this->page);
     }
 }
