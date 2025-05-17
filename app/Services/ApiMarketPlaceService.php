@@ -2,13 +2,14 @@
 
 namespace App\Services;
 
+use App\Interfaces\ApiConectorInterface;
 use App\Jobs\GetOfferDetailJob;
 use App\Jobs\GetOffersPageJob;
 use App\Models\Offer;
 use App\Models\OfferImage;
 use GuzzleHttp\Client;
 
-class ApiMarketPlaceService
+class ApiMarketPlaceService implements ApiConectorInterface
 {
     protected $client;
     protected $baseUrl;

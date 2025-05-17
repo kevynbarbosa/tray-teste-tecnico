@@ -2,4 +2,11 @@
 
 namespace App\Interfaces;
 
-class ApiConectorInterface {}
+use GuzzleHttp\Client;
+
+interface ApiConectorInterface
+{
+    private string $baseUrl;
+
+    private Client $client;
+}

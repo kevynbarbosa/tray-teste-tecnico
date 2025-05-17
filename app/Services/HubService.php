@@ -2,10 +2,11 @@
 
 namespace App\Services;
 
+use App\Interfaces\ApiConectorInterface;
 use App\Models\Offer;
 use GuzzleHttp\Client;
 
-class HubService
+class HubService implements ApiConectorInterface
 {
     protected $client;
     protected $baseUrl;
