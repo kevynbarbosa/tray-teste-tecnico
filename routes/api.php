@@ -12,6 +12,7 @@ Route::get('/import-offers', function (Request $request) {
     // 2. Disparar um job para cada pagina disponivel
     // 3. Na model de anuncio, disparar os jobs de imagens e preço
     // 4. Event Listener para conclusao ou erro da importação
+    // 5. Se todas etapas forem concluiodas enviar ao hub
 
     return response()->json(['message' => 'Offers imported successfully']);
 });
