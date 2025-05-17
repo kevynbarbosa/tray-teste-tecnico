@@ -8,8 +8,8 @@ use GuzzleHttp\Client;
 
 class HubService implements ApiConectorInterface
 {
-    protected $client;
-    protected $baseUrl;
+    public Client $client;
+    public string $baseUrl;
 
     public function __construct()
     {

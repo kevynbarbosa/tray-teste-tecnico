@@ -6,7 +6,7 @@ use GuzzleHttp\Client;
 
 interface ApiConectorInterface
 {
-    public string $baseUrl;
+    public string $baseUrl { get; set; }
 
-    public Client $client;
+    public Client $client { get; set; }
 }

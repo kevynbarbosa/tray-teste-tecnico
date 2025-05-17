@@ -11,8 +11,8 @@ use GuzzleHttp\Client;
 
 class ApiMarketPlaceService implements ApiConectorInterface
 {
-    protected $client;
-    protected $baseUrl;
+    public Client $client;
+    public string $baseUrl;
 
     public function __construct()
     {
