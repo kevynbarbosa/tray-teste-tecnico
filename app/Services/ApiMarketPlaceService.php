@@ -24,6 +24,7 @@ class ApiMarketPlaceService
         $response = $response->getBody()->getContents();
         $response = trim($response);
         $response = preg_replace('/\s+/', ' ', $response);
+        $response = json_decode($response, true);
 
         return $response;
     }
@@ -37,17 +38,15 @@ class ApiMarketPlaceService
             throw new \Exception("Failed to fetch offers from API. Status code: " . $statusCode);
         }
 
-        $responseBody = $this->sanitizeResponse($response);
-
-        $arrayResponse = json_decode(trim($responseBody), true);
-        $totalPages = $arrayResponse['pagination']['total_pages'];
+        $responseArray = $this->sanitizeResponse($response);
+        $totalPages = $responseArray['pagination']['total_pages'];
 
         for ($i = 1; $i <= $totalPages; $i++) {
             GetOffersPageJob::dispatch($i);
         }
     }
 
-    public function getOffersPage($page)
+    public function getOffersPage(int $page)
     {
         $response = $this->client->get($this->baseUrl . "/offers?page=$page");
 
@@ -56,12 +55,18 @@ class ApiMarketPlaceService
             throw new \Exception("Failed to fetch offers from API. Status code: " . $statusCode);
         }
 
-        $responseBody = $this->sanitizeResponse($response);
-        $arrayResponse = json_decode($responseBody, true);
+        $responseArray = $this->sanitizeResponse($response);
 
-        $offers = $arrayResponse['data']['offers'];
+        $offers = $responseArray['data']['offers'];
         foreach ($offers as $offerId) {
-            GetOfferDetailJob::dispatch($offerId);
+            // Poderiamos disparar jobs para cada anuncio já para atualizar imagens e preço, mas será realizado de forma sequencial
+            // Apenas o job de detalhes será disparado
+            // E posteriormente os demais jobs
+
+            $offer = Offer::updateOrCreate(
+                ['id' => $offerId],
+            );
+            GetOfferDetailJob::dispatch($offer);
         }
     }
 
@@ -74,12 +79,12 @@ class ApiMarketPlaceService
             throw new \Exception("Failed to fetch offer DETAILS from API. Status code: " . $statusCode);
         }
 
-        $responseBody = $this->sanitizeResponse($response);
-        $arrayResponse = json_decode($responseBody, true);
+        $responseArray = $this->sanitizeResponse($response);
+
 
         Offer::updateOrCreate(
             ['id' => $offerId],
-            $arrayResponse['data']
+            $responseArray['data']
         );
     }
 
@@ -92,10 +97,10 @@ class ApiMarketPlaceService
             throw new \Exception("Failed to fetch offers IMAGES from API. Status code: " . $statusCode);
         }
 
-        $responseBody = $this->sanitizeResponse($response);
-        $arrayResponse = json_decode($responseBody, true);
+        $responseArray = $this->sanitizeResponse($response);
 
-        foreach ($arrayResponse['data']['images'] as $offerImage) {
+
+        foreach ($responseArray['data']['images'] as $offerImage) {
 
             OfferImage::updateOrCreate(
                 [
@@ -115,13 +120,12 @@ class ApiMarketPlaceService
             throw new \Exception("Failed to fetch offer PRICES from API. Status code: " . $statusCode);
         }
 
-        $responseBody = $this->sanitizeResponse($response);
-        $arrayResponse = json_decode($responseBody, true);
+        $responseArray = $this->sanitizeResponse($response);
 
         Offer::updateOrCreate(
             ['id' => $offerId],
             [
-                'price' => $arrayResponse['data']['price'],
+                'price' => $responseArray['data']['price'],
             ]
         );
     }

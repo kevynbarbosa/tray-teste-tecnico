@@ -2,7 +2,9 @@
 
 namespace App\Jobs;
 
+use App\Models\Offer;
 use App\Services\ApiMarketPlaceService;
+use App\States\OfferPendingImagesState;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 
@@ -13,7 +15,7 @@ class GetOfferImagesJob implements ShouldQueue
     /**
      * Create a new job instance.
      */
-    public function __construct(public int $offerId) {}
+    public function __construct(public Offer $offer) {}
 
 
     /**
@@ -21,6 +23,7 @@ class GetOfferImagesJob implements ShouldQueue
      */
     public function handle(): void
     {
-        (new ApiMarketPlaceService())->getOfferImages($this->offerId);
+        // (new ApiMarketPlaceService())->getOfferImages($this->offerId); // Sem utilizar State Pattern
+        (new OfferPendingImagesState($this->offer))->execute();
     }
 }

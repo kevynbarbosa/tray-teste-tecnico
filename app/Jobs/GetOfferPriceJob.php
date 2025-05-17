@@ -2,7 +2,9 @@
 
 namespace App\Jobs;
 
+use App\Models\Offer;
 use App\Services\ApiMarketPlaceService;
+use App\States\OfferPendingPriceState;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 
@@ -13,7 +15,7 @@ class GetOfferPriceJob implements ShouldQueue
     /**
      * Create a new job instance.
      */
-    public function __construct(public int $offerId) {}
+    public function __construct(public Offer $offer) {}
 
 
     /**
@@ -21,6 +23,7 @@ class GetOfferPriceJob implements ShouldQueue
      */
     public function handle(): void
     {
-        (new ApiMarketPlaceService())->getOfferPrice($this->offerId);
+        // (new ApiMarketPlaceService())->getOfferPrice($this->offerId); // Sem utilizar State Pattern
+        (new OfferPendingPriceState($this->offer))->execute();
     }
 }

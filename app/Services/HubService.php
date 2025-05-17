@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Offer;
 use GuzzleHttp\Client;
 
 class HubService
@@ -15,13 +16,13 @@ class HubService
         $this->baseUrl = env('API_HUB_BASE_URL');
     }
 
-    public function createOffer($offerId)
+    public function createOffer(Offer $offer)
     {
         $payload = [
-            "title" => "string",
-            "description" => "string",
-            "status" => "string",
-            "stock" => 999999
+            "title" => $offer->title,
+            "description" => $offer->description,
+            "status" => $offer->status,
+            "stock" => $offer->stock,
         ];
 
         $response = $this->client->post($this->baseUrl . "/create-offer", [
@@ -32,7 +33,5 @@ class HubService
         if ($statusCode !== 200) {
             throw new \Exception("Failed to create offer in HUB. Status code: " . $statusCode);
         }
-
-        // Atualizar o status do produto
     }
 }
