@@ -26,5 +26,9 @@ class GetOfferImagesJob implements ShouldQueue
         // (new ApiMarketPlaceService())->getOfferImages($this->offerId); // Sem utilizar State Pattern
         // (new OfferPendingImagesState($this->offer))->execute();
         $this->offer->executeState();
+        logger()->info('GetOfferImagesJob', [
+            'offer_id' => $this->offer->id,
+            'status'   => $this->offer->workflow_status,
+        ]);
     }
 }

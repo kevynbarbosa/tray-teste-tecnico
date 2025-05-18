@@ -16,7 +16,7 @@ class OfferPendingImagesState extends OfferState
         $success = (new ApiMarketPlaceService())->getOfferImages($this->offer->id);
 
         if ($success) {
-            $this->offer->workflow_status = OfferImportStatus::PENDING_PRICE;
+            $this->offer->workflow_status = 'PENDING_PRICE';
             $this->offer->setState(new OfferPendingPriceState($this->offer));
             $this->offer->save();
             GetOfferPriceJob::dispatch($this->offer);
