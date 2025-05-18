@@ -9,6 +9,8 @@ use Illuminate\Database\Eloquent\Model;
 #[ObservedBy([OfferObserver::class])]
 class Offer extends Model
 {
+    public $incrementing = false;
+
     protected $fillable = [
         'id',
         'title',

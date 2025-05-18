@@ -64,7 +64,7 @@ class ApiMarketPlaceService implements ApiConectorInterface
         $responseArray = $this->sanitizeResponse($response);
 
         $offers = $responseArray['data']['offers'];
-        foreach ($offers as $offerId) {
+        foreach ($offers as $key => $offerId) {
             // Poderiamos disparar jobs para cada anuncio já para atualizar imagens e preço, mas será realizado de forma sequencial
             // Apenas o job de detalhes será disparado
             // E posteriormente os demais jobs
@@ -72,6 +72,7 @@ class ApiMarketPlaceService implements ApiConectorInterface
             $offer = Offer::updateOrCreate(
                 ['id' => $offerId],
             );
+
             GetOfferDetailJob::dispatch($offer);
         }
     }
