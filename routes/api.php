@@ -10,12 +10,12 @@ Route::get('/import-offers', [ImportOfferController::class, 'importOffers'])
     ->name('import-offers');
 
 
-Route::get('/pages', function () {
-    $service = new ApiMarketPlaceService;
-    $service->getOffersPage(1);
-});
-
 // Rotas usadas apenas para teste
+// Route::get('/pages', function () {
+//     $service = new ApiMarketPlaceService;
+//     $service->getOffersPage(1);
+// });
+
 // Route::get('/details', function () {
 //     $service = new ApiMarketPlaceService;
 //     $service->getOfferDetails(2024001);
