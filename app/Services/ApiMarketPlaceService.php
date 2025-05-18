@@ -73,7 +73,7 @@ class ApiMarketPlaceService implements ApiConectorInterface
                 ['id' => $offerId],
             );
 
-            GetOfferDetailJob::dispatch($offer);
+            $offer->executeState();
         }
     }
 

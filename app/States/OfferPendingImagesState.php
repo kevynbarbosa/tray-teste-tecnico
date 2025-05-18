@@ -3,7 +3,6 @@
 namespace App\States;
 
 use App\Enum\OfferImportStatus;
-use App\Interfaces\OfferStateInterface;
 use App\Jobs\GetOfferPriceJob;
 use App\Models\Offer;
 use App\Services\ApiMarketPlaceService;
@@ -18,6 +17,7 @@ class OfferPendingImagesState extends OfferState
 
         if ($success) {
             $this->offer->workflow_status = OfferImportStatus::PENDING_PRICE;
+            $this->offer->setState(new OfferPendingPriceState($this->offer));
             $this->offer->save();
             GetOfferPriceJob::dispatch($this->offer);
         } else {

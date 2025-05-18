@@ -39,19 +39,19 @@ class Offer extends Model
     private function initState(): void
     {
         $this->state = match ($this->status) {
-            OfferImportStatus::PENDING_DETAILS      => new OfferPendingDetailsState($this),
-            OfferImportStatus::ERROR_DETAILS        => new OfferPendingDetailsState($this),
+            'PENDING_DETAILS'      => new OfferPendingDetailsState($this),
+            'ERROR_DETAILS'        => new OfferPendingDetailsState($this),
 
-            OfferImportStatus::PENDING_IMAGES       => new OfferPendingImagesState($this),
-            OfferImportStatus::ERROR_IMAGES         => new OfferPendingImagesState($this),
+            'PENDING_IMAGES'       => new OfferPendingImagesState($this),
+            'ERROR_IMAGES'         => new OfferPendingImagesState($this),
 
-            OfferImportStatus::PENDING_PRICE        => new OfferPendingPriceState($this),
-            OfferImportStatus::ERROR_PRICE          => new OfferPendingPriceState($this),
+            'PENDING_PRICE'        => new OfferPendingPriceState($this),
+            'ERROR_PRICE'          => new OfferPendingPriceState($this),
 
-            OfferImportStatus::PENDING_CREATE_HUB   => new OfferPendingCreateHubState($this),
-            OfferImportStatus::ERROR_CREATE_HUB     => new OfferPendingCreateHubState($this),
+            'PENDING_CREATE_HUB'   => new OfferPendingCreateHubState($this),
+            'ERROR_CREATE_HUB'     => new OfferPendingCreateHubState($this),
 
-            OfferImportStatus::COMPLETED            => new OfferCompletedState($this),
+            'COMPLETED'            => new OfferCompletedState($this),
 
             default             => new OfferPendingDetailsState($this)
         };

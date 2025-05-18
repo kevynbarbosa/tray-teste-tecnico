@@ -18,6 +18,7 @@ class OfferPendingDetailsState extends OfferState
 
         if ($success) {
             $this->offer->workflow_status = OfferImportStatus::PENDING_IMAGES;
+            $this->offer->setState(new OfferPendingImagesState($this->offer));
             $this->offer->save();
             GetOfferImagesJob::dispatch($this->offer);
         } else {

@@ -18,6 +18,7 @@ class OfferPendingPriceState extends OfferState
 
         if ($success) {
             $this->offer->workflow_status = OfferImportStatus::PENDING_CREATE_HUB;
+            $this->offer->setState(new OfferPendingCreateHubState($this->offer));
             $this->offer->save();
             PostOfferToHubJob::dispatch($this->offer);
         } else {
