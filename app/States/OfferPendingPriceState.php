@@ -8,7 +8,7 @@ use App\Jobs\PostOfferToHubJob;
 use App\Models\Offer;
 use App\Services\ApiMarketPlaceService;
 
-class OfferPendingPriceState implements OfferStateInterface
+class OfferPendingPriceState extends OfferState
 {
     public function __construct(public Offer $offer) {}
 
@@ -18,6 +18,7 @@ class OfferPendingPriceState implements OfferStateInterface
 
         if ($success) {
             $this->offer->workflow_status = OfferImportStatus::PENDING_CREATE_HUB;
+            $this->offer->setState(new OfferPendingCreateHubState($this->offer));
             $this->offer->save();
             PostOfferToHubJob::dispatch($this->offer);
         } else {

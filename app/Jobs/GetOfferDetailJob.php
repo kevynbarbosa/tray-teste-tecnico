@@ -3,11 +3,8 @@
 namespace App\Jobs;
 
 use App\Models\Offer;
-use App\Services\ApiMarketPlaceService;
-use App\States\OfferPendingDetailsState;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
-use Illuminate\Support\Facades\Log;
 
 class GetOfferDetailJob implements ShouldQueue
 {
@@ -25,6 +22,7 @@ class GetOfferDetailJob implements ShouldQueue
     public function handle(): void
     {
         // (new ApiMarketPlaceService())->getOfferDetails($this->offerId); // Sem utilizar State Pattern
-        (new OfferPendingDetailsState($this->offer))->execute();
+        // (new OfferPendingDetailsState($this->offer))->execute();
+        $this->offer->executeState();
     }
 }
