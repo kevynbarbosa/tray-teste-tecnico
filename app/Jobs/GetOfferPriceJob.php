@@ -23,8 +23,6 @@ class GetOfferPriceJob implements ShouldQueue
      */
     public function handle(): void
     {
-        // (new ApiMarketPlaceService())->getOfferPrice($this->offerId); // Sem utilizar State Pattern
-        // (new OfferPendingPriceState($this->offer))->execute();
         $this->offer->executeState();
     }
 }

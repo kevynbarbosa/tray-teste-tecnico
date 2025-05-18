@@ -28,7 +28,7 @@ class Offer extends Model
         'workflow_status',
     ];
 
-    private OfferState $state;
+    public OfferState $state;
 
     public function __construct(array $attributes = [])
     {
@@ -36,9 +36,10 @@ class Offer extends Model
         $this->initState();
     }
 
-    private function initState(): void
+    public function initState(): void
     {
-        $this->state = match ($this->status) {
+        // Esta inicializacao nao está funcionando corretamente
+        $this->state = match ($this->workflow_status) {
             'PENDING_DETAILS'      => new OfferPendingDetailsState($this),
             'ERROR_DETAILS'        => new OfferPendingDetailsState($this),
 
@@ -64,6 +65,7 @@ class Offer extends Model
 
     public function executeState(): bool
     {
+        $this->initState();
         return $this->state->execute();
     }
 }
