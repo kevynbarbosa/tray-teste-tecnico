@@ -7,7 +7,7 @@ use App\Interfaces\OfferStateInterface;
 use App\Models\Offer;
 use App\Services\HubService;
 
-class OfferPendingCreateHubState implements OfferStateInterface
+class OfferPendingCreateHubState extends OfferState
 {
     public function __construct(public Offer $offer) {}
 
@@ -22,7 +22,6 @@ class OfferPendingCreateHubState implements OfferStateInterface
             $this->offer->workflow_status = OfferImportStatus::ERROR_CREATE_HUB;
             $this->offer->save();
         }
-
 
         return $success;
     }

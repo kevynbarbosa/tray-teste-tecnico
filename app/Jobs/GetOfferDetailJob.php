@@ -25,6 +25,7 @@ class GetOfferDetailJob implements ShouldQueue
     public function handle(): void
     {
         // (new ApiMarketPlaceService())->getOfferDetails($this->offerId); // Sem utilizar State Pattern
-        (new OfferPendingDetailsState($this->offer))->execute();
+        // (new OfferPendingDetailsState($this->offer))->execute();
+        $this->offer->executeState();
     }
 }

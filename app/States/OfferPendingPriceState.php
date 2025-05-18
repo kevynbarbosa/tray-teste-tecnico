@@ -8,7 +8,7 @@ use App\Jobs\PostOfferToHubJob;
 use App\Models\Offer;
 use App\Services\ApiMarketPlaceService;
 
-class OfferPendingPriceState implements OfferStateInterface
+class OfferPendingPriceState extends OfferState
 {
     public function __construct(public Offer $offer) {}
 

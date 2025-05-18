@@ -8,7 +8,7 @@ use App\Jobs\GetOfferImagesJob;
 use App\Models\Offer;
 use App\Services\ApiMarketPlaceService;
 
-class OfferPendingDetailsState implements OfferStateInterface
+class OfferPendingDetailsState extends OfferState
 {
     public function __construct(public Offer $offer) {}
 
