@@ -3,8 +3,8 @@ Projeto utiliza Laravel Sail como container de docker
 
 Optei por utilizar apenas a fila default para facilitar desenvolvimento, mas cada job deve conter sua propria fila para fins de paralelismos
 
-Existe uma branch chamada StatePattern que não está funcional, porém uma tentative de implementar o State Pattern de maneira total!
-
-1. sail up
-2. sail composer install
-3. sail artisan queue:work
+1. docker run --rm -it -v $(pwd)/.:/app -w /app laravelsail/php83-composer:latest composer install
+2. sail up
+3. sail artisan migrate
+4. sail artisan queue:work
+5. Realizar request em http://localhost/api/import-offers
